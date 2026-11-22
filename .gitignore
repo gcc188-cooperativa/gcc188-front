@@ -1,0 +1,25 @@
+# Dependências e artefatos de build
+node_modules/
+dist/
+dist-ssr/
+build/
+coverage/
+
+# Ambiente local e segredos
+.env
+.env.*
+!.env.example
+*.local
+
+# Testes E2E e relatórios
+playwright-report/
+test-results/
+blob-report/
+
+# IDEs e arquivos de SO
+.idea/
+.vscode/
+*.iml
+*.log
+.DS_Store
+Thumbs.db
