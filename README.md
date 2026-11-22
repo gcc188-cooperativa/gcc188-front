@@ -11,6 +11,14 @@ Interface web (SPA) do sistema da **Cooperativa de Transportes** — GCC188/UFLA
 - **Contrato**: consumido a partir de [`gcc188-api-contract`](https://github.com/gcc188-cooperativa/gcc188-api-contract) (tipos TypeScript gerados);
 - **Testes**: Vitest + Testing Library (unidade) e Playwright (ponta a ponta, executado pelo [`gcc188-infra`](https://github.com/gcc188-cooperativa/gcc188-infra)).
 
+## Regras de uso do Git (tarefa #21)
+
+- **Ramos:** _Git Flow_ adaptado (Design, cap. 3) — `master` recebe somente PR de `develop` (ou o PR automático de _release_); trabalho em `feat/*`, `fix/*` e `docs/*`, com PR revisado e _squash merge_. Versionamento SemVer por Release Please.
+- **Commits:** _Conventional Commits_ `tipo(escopo): descrição (RF-xxx-NN)`; escopos do front (`auth`, `usuarios`, `cooperandos`, `clientes`, `contratos`, `pagamentos`, `despesas`, `relatorios`, `ui`, `routing`). Ex.: `feat(usuarios): tela de inativação (RF-USR-04)`.
+- **Pastas:** código em `src/`, contrato gerado em `src/shared/generated/`, mocks em `mocks/`; documentação de requisitos/design permanece em `gcc188-docs`. Artefatos de build, cobertura e dados locais não são versionados.
+- **`.gitignore`:** ao iniciar o código, versionar arquivo que ignore `node_modules/`, `dist/`, `coverage/`, `.env`, `playwright-report/` e `test-results/` — extensões/pastas geradas nunca devem ir para o repositório.
+- **Verificação:** `lefthook` com `commit-msg` (commitlint) e, quando houver suíte, `pre-push` com testes; o CI valida título de PR e commits. O repositório `gcc188-front` ainda não tem código, mas as regras já valem para o primeiro commit.
+
 ## Status
 
 | Marco | Descrição | Situação |
