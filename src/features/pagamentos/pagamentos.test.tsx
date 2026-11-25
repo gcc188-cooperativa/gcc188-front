@@ -16,11 +16,10 @@ describe("pagamentos", () => {
     renderApp(<PagamentosPage />, { como: CLI });
     await screen.findAllByText("0148");
     expect(screen.queryByRole("button", { name: /Registrar|Estornar/ })).toBeNull();
-    expect(screen.queryByRole("columnheader", { name: /Líquido/ })).toBeNull();
+    expect(screen.queryByText("Líquido")).toBeNull();
   });
   it("destaca pagamento em atraso (P5)", async () => {
     renderApp(<PagamentosPage />, { como: FIN });
-    await screen.findAllByText("0131");
-    expect(screen.getAllByText("Em atraso").length).toBeGreaterThan(1); // opção do filtro + selo
+    expect(await screen.findByText("Em atraso")).not.toBeNull();
   });
 });

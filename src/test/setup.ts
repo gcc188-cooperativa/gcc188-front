@@ -30,5 +30,4 @@ globalThis.ResizeObserver ??= class {
   unobserve() {}
   disconnect() {}
 };
-Element.prototype.scrollIntoView ??= () => {}; // Combobox/Select do Mantine
 HTMLCanvasElement.prototype.getContext = (() => null) as never; // axe consulta o canvas; o jsdom não o implementa

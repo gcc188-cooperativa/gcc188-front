@@ -1,53 +1,55 @@
+import { Button } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { api, msgErro, ok } from "../../shared/api/client";
-import { PAPEL } from "../../shared/ui";
-import { CadastroLista, SituacaoBadge, type CadastroCfg, type Row } from "../../shared/ui/cadastro";
-import { confirmar } from "../../shared/ui/confirm";
-import { toast } from "../../shared/ui/toast";
+import { CrudPage, type CrudConfig, type Row } from "../../shared/ui/crud";
+import { StatusBadge } from "../../shared/ui";
 
-const papeis = Object.entries(PAPEL).map(([value, label]) => ({
-  value: value as never as string,
-  label,
-}));
-export const usuariosCfg: CadastroCfg = {
-  chave: "usuarios",
-  base: "/usuarios",
-  singular: "usuário",
+const redefinir = async (id: number) => {
+  const senha_temporaria = window.prompt("Senha temporária (mínimo 12 caracteres):");
+  if (!senha_temporaria) return;
+  const r = await api.POST("/usuarios/{id}/redefinicao-senha", {
+    params: { path: { id } },
+    body: { senha_temporaria },
+  });
+  notifications.show(
+    r.error
+      ? { color: "red", message: msgErro(r.error) }
+      : { color: "teal", message: "Senha redefinida; a troca será exigida no próximo acesso." },
+  );
+};
+const cfg: CrudConfig = {
   titulo: "Usuários",
   sub: "Quem acessa o sistema e com qual papel.",
-  subNovo: "A pessoa troca a senha no primeiro acesso.",
-  opcoesPapel: papeis,
+  chave: "usuarios",
   podeEscrever: true,
-  colunas: [
-    { t: "Nome", r: (r) => String(r.nome), o: (r) => String(r.nome) },
-    { t: "E-mail", r: (r) => String(r.email), o: (r) => String(r.email) },
-    { t: "Papel", r: (r) => PAPEL[String(r.papel)], o: (r) => String(r.papel) },
-    { t: "Situação", r: (r) => <SituacaoBadge r={r} />, o: (r) => (r.ativo ? 0 : 1) },
-  ],
-  secoes: [
+  campos: [
+    { name: "nome", label: "Nome", obrigatorio: true },
+    { name: "email", label: "E-mail", type: "email", obrigatorio: true },
     {
-      titulo: "Dados do usuário",
-      campos: [
-        { name: "nome", label: "Nome" },
-        { name: "email", label: "E-mail", type: "email" },
-        { name: "papel", label: "Papel", opcoes: papeis },
-        {
-          name: "senha",
-          label: "Senha temporária",
-          type: "password",
-          criacao: true,
-          hint: "Mínimo de 12 caracteres. A pessoa troca no primeiro acesso.",
-        },
-      ],
+      name: "papel",
+      label: "Papel",
+      opcoes: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA", "CLIENTE"],
+      obrigatorio: true,
+    },
+    {
+      name: "senha",
+      label: "Senha temporária",
+      type: "password",
+      criacao: true,
+      obrigatorio: true,
     },
   ],
-  listar: async ({ page, ativo, papel }) =>
-    ok(
-      await api.GET("/usuarios", {
-        params: { query: { page, size: 20, ativo, ...(papel ? { papel: papel as never } : {}) } },
-      }),
-    ) as unknown as { content: Row[]; total_pages: number },
-  obter: async (id) =>
-    ok(await api.GET("/usuarios/{id}", { params: { path: { id } } })) as unknown as Row,
+  colunas: [
+    { titulo: "Nome", render: (r) => String(r.nome) },
+    { titulo: "E-mail", render: (r) => String(r.email) },
+    { titulo: "Papel", render: (r) => String(r.papel) },
+    { titulo: "Situação", render: (r) => <StatusBadge s={r.ativo ? "ATIVO" : "CANCELADO"} /> },
+  ],
+  listar: async (page) =>
+    ok(await api.GET("/usuarios", { params: { query: { page, size: 20 } } })) as unknown as {
+      content: Row[];
+      total_pages: number;
+    },
   criar: (v) => api.POST("/usuarios", { body: v as never }),
   atualizar: (r, v) =>
     api.PUT("/usuarios/{id}", {
@@ -56,23 +58,10 @@ export const usuariosCfg: CadastroCfg = {
     }),
   situacao: (id, ativo) =>
     api.PATCH("/usuarios/{id}/situacao", { params: { path: { id } }, body: { ativo } }),
-  extra: (r) => [
-    {
-      rotulo: "Redefinir senha",
-      fazer: () =>
-        confirmar({
-          titulo: "Redefinir senha?",
-          mensagem: "A pessoa precisará trocar a senha no próximo acesso.",
-          campo: { rotulo: "Senha temporária (mínimo 12 caracteres)", tipo: "password" },
-          aoConfirmar: async (senha_temporaria) => {
-            const x = await api.POST("/usuarios/{id}/redefinicao-senha", {
-              params: { path: { id: r.id } },
-              body: { senha_temporaria },
-            });
-            toast(x.error ? msgErro(x.error) : "Senha redefinida.", !!x.error);
-          },
-        }),
-    },
-  ],
+  extra: (r) => (
+    <Button size="xs" variant="default" onClick={() => redefinir(r.id)}>
+      Redefinir senha
+    </Button>
+  ),
 };
-export const UsuariosPage = () => <CadastroLista cfg={usuariosCfg} />;
+export const UsuariosPage = () => <CrudPage cfg={cfg} />;
