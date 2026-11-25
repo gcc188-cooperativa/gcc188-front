@@ -1,0 +1,18 @@
+pre-commit:
+  commands:
+    prettier:
+      glob: "*.{ts,tsx,json,md}"
+      run: "npx prettier --write {staged_files} && git add {staged_files}"
+    eslint:
+      glob: "*.{ts,tsx}"
+      run: "npx eslint --fix {staged_files}"
+commit-msg:
+  commands:
+    commitlint:
+      run: "npx commitlint --edit {1}"
+pre-push:
+  commands:
+    typecheck:
+      run: "npm run typecheck"
+    test:
+      run: "npx vitest run"
