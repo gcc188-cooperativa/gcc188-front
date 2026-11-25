@@ -1,14 +1,15 @@
-import { Alert, Button, Paper, PasswordInput, Stack, TextInput, Title } from "@mantine/core";
+import { Button, PasswordInput, TextInput } from "@mantine/core";
 import { useState } from "react";
 import { api, msgErro } from "../../shared/api/client";
+import { Icone } from "../../shared/ui/icons";
 import { useSession } from "./session";
 
 export function LoginPage() {
   const { setUser } = useSession();
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [erro, setErro] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [email, setEmail] = useState(""),
+    [senha, setSenha] = useState(""),
+    [erro, setErro] = useState(""),
+    [busy, setBusy] = useState(false);
   async function entrar(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
@@ -19,33 +20,33 @@ export function LoginPage() {
     else setUser(r.data!);
   }
   return (
-    <Stack align="center" mt={96} px="md">
-      <Paper withBorder p="xl" radius="md" w="100%" maw={400}>
-        <form onSubmit={entrar}>
-          <Stack>
-            <Title order={2}>Entrar na cooperativa</Title>
-            {erro && <Alert color="red">{erro}</Alert>}
-            <TextInput
-              label="E-mail"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.currentTarget.value)}
-              autoComplete="username"
-            />
-            <PasswordInput
-              label="Senha"
-              required
-              value={senha}
-              onChange={(e) => setSenha(e.currentTarget.value)}
-              autoComplete="current-password"
-            />
-            <Button type="submit" loading={busy}>
-              Entrar
-            </Button>
-          </Stack>
-        </form>
-      </Paper>
-    </Stack>
+    <form className="card login" onSubmit={entrar}>
+      <p className="logo">Cooperativa</p>
+      <h2 style={{ marginBottom: 14 }}>Entrar na cooperativa</h2>
+      {erro && (
+        <div className="msg" role="alert" style={{ marginBottom: 10 }}>
+          <Icone n="alert" />
+          <span>{erro}</span>
+        </div>
+      )}
+      <TextInput
+        mb="sm"
+        label="E-mail"
+        type="email"
+        autoComplete="username"
+        value={email}
+        onChange={(e) => setEmail(e.currentTarget.value)}
+      />
+      <PasswordInput
+        mb="md"
+        label="Senha"
+        autoComplete="current-password"
+        value={senha}
+        onChange={(e) => setSenha(e.currentTarget.value)}
+      />
+      <Button variant="default" className="bt pri" type="submit" disabled={busy}>
+        Entrar
+      </Button>
+    </form>
   );
 }
