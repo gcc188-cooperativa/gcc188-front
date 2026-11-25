@@ -1,10 +1,8 @@
-import { cleanup, configure } from "@testing-library/react";
+import { cleanup } from "@testing-library/react";
+import { notifications } from "@mantine/notifications";
 import { afterAll, afterEach, beforeAll } from "vitest";
 import { resetDb } from "../mocks/db";
 import { server } from "../mocks/server";
-
-// O hook de pre-push roda typecheck e testes em paralelo: consultas assíncronas precisam de mais tempo.
-configure({ asyncUtilTimeout: 5000 });
 
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterEach(() => {
@@ -12,6 +10,8 @@ afterEach(() => {
   server.resetHandlers();
   resetDb();
   sessionStorage.clear();
+  localStorage.clear();
+  notifications.clean();
 });
 afterAll(() => server.close());
 // O Mantine precisa destas APIs, ausentes no jsdom.
@@ -31,3 +31,5 @@ globalThis.ResizeObserver ??= class {
   disconnect() {}
 };
 HTMLCanvasElement.prototype.getContext = (() => null) as never; // axe consulta o canvas; o jsdom não o implementa
+window.scrollTo = (() => {}) as never;
+Element.prototype.scrollIntoView = () => {};
