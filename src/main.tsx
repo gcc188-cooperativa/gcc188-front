@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./app/App";
+import { theme } from "./app/theme";
 import { SessionProvider } from "./features/auth/session";
 
 const qc = new QueryClient({
@@ -18,7 +19,7 @@ async function iniciar() {
   if (import.meta.env.VITE_MOCK)
     await (await import("./mocks/browser")).worker.start({ onUnhandledRequest: "bypass" });
   createRoot(document.getElementById("root")!).render(
-    <MantineProvider defaultColorScheme="auto" theme={{ primaryColor: "teal" }}>
+    <MantineProvider theme={theme} defaultColorScheme="auto">
       <ModalsProvider>
         <Notifications />
         <QueryClientProvider client={qc}>
