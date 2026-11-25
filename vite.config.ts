@@ -9,8 +9,6 @@ export default defineConfig({
     environment: "jsdom",
     env: { VITE_API_BASE: "http://localhost/api/v1" },
     setupFiles: ["src/test/setup.ts"],
-    // Suítes com MSW ficam mais lentas quando o Vitest paraleliza arquivos.
-    testTimeout: 20000,
     // RNF-11: pelo menos 60% das linhas em shared/lib, shared/permissions e hooks (aqui: permissions e ui).
     coverage: {
       include: ["src/shared/**", "src/features/auth/**"],
