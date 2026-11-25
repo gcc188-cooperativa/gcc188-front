@@ -32,23 +32,36 @@ export function acoesDisponiveis(
   );
 }
 
-export const MENU: { to: string; label: string; papeis: Papel[] }[] = [
-  { to: "/", label: "Painel", papeis: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA", "CLIENTE"] },
-  { to: "/usuarios", label: "Usuários", papeis: ["ADMINISTRADOR"] },
+const TODOS: Papel[] = ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA", "CLIENTE"];
+export const MENU: { to: string; label: string; icone: string; papeis: Papel[] }[] = [
+  { to: "/", label: "Painel", icone: "home", papeis: TODOS },
+  { to: "/usuarios", label: "Usuários", icone: "users", papeis: ["ADMINISTRADOR"] },
   {
-    to: "/contratos",
-    label: "Contratos",
-    papeis: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA", "CLIENTE"],
+    to: "/cooperados",
+    label: "Cooperados",
+    icone: "user",
+    papeis: ["ADMINISTRADOR", "FINANCEIRO"],
   },
-  { to: "/cooperados", label: "Cooperados", papeis: ["ADMINISTRADOR", "FINANCEIRO"] },
-  { to: "/clientes", label: "Clientes", papeis: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA"] },
   {
-    to: "/pagamentos",
-    label: "Pagamentos",
-    papeis: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA", "CLIENTE"],
+    to: "/clientes",
+    label: "Clientes",
+    icone: "brief",
+    papeis: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA"],
   },
-  { to: "/despesas", label: "Despesas", papeis: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA"] },
-  { to: "/relatorios", label: "Relatórios", papeis: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA"] },
+  { to: "/contratos", label: "Contratos", icone: "doc", papeis: TODOS },
+  { to: "/pagamentos", label: "Pagamentos", icone: "coin", papeis: TODOS },
+  {
+    to: "/despesas",
+    label: "Despesas",
+    icone: "down",
+    papeis: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA"],
+  },
+  {
+    to: "/relatorios",
+    label: "Relatórios",
+    icone: "chart",
+    papeis: ["ADMINISTRADOR", "FINANCEIRO", "MOTORISTA"],
+  },
 ];
 export const pode = {
   baixaRepasse: (p: Papel) => p === "FINANCEIRO",

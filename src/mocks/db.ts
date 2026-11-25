@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 const t = "2026-11-10T13:00:00Z";
 const b = () => ({ versao: 0, criado_em: t, atualizado_em: t });
 const u = (id: number, nome: string, email: string, papel: string, extra = {}) => ({
@@ -180,7 +181,7 @@ export const seed = () => ({
     pag(1, 148, 1, "2026-10-12", "PAGO"),
     pag(2, 148, 2, "2026-12-12", "PREVISTO"),
     pag(3, 148, 3, "2027-01-12", "PREVISTO"),
-    pag(4, 131, 5, "2026-10-28", "PREVISTO", 950, 50),
+    pag(4, 131, 5, dayjs().subtract(10, "day").format("YYYY-MM-DD"), "PREVISTO", 950, 50),
   ],
   despesas: [
     {
